@@ -74,11 +74,16 @@ public class MapScreen extends Screen {
                 this.inputDelay.reset();
             }
             if (inputManager.isKeyDown(KeyEvent.VK_SPACE)){
-                sound.SoundPlay.getInstance().stopBgm();
                 sound.SoundPlay.getInstance().play(SoundType.menuClick);
-                chapterState.curStageClear();
-                returnCode = 100; // Enemy
-                isRunning = false;
+                this.inputDelay.reset();
+
+                int stageCode = chapterState.curStageClear(); // Enemy = 100
+
+                if (stageCode == ChapterState.Stage_Type.ENEMY.ordinal()){
+                    sound.SoundPlay.getInstance().stopBgm();
+                    returnCode = 100;
+                    isRunning = false;
+                }
             }
         }
     }
