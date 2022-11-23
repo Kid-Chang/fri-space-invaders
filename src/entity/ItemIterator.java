@@ -1,5 +1,7 @@
 package entity;
 
+import engine.I_State;
+
 import java.util.HashSet;
 import java.util.Set;
 /**
@@ -8,7 +10,7 @@ import java.util.Set;
  */
 public class ItemIterator {
     /** Set of already created items. */
-    private static Set<Item> iterator = new HashSet<Item>();
+    private static Set<InGameItem> iterator = new HashSet<InGameItem>();
 
     /**
      * Constructor, not called.
@@ -23,24 +25,23 @@ public class ItemIterator {
      *            Requested position of the item in the X axis.
      * @param positionY
      *            Requested position of the item in the Y axis.
-     * @param itemtype
+     * @param i_state
      *            Requested itemtype of item, for calling constructor of Item class.
      * @return Requested item.
      */
-    public static Item drop(final int positionX,
-                               final int positionY,  Item.ItemType itemtype) {
-        Item item;
+    public static InGameItem drop(final int positionX,
+                               final int positionY,  I_State i_state) {
+        InGameItem inGameItem;
         if (!iterator.isEmpty()) {
-            item = iterator.iterator().next();
-            iterator.remove(item);
-            item.setPositionX(positionX - item.getWidth() / 2);
-            item.setPositionY(positionY);
-
+            inGameItem = iterator.iterator().next();
+            iterator.remove(inGameItem);
+            inGameItem.setPositionX(positionX - inGameItem.getWidth() / 2);
+            inGameItem.setPositionY(positionY);
         } else {
-            item = new Item(positionX,positionY, 2 ,itemtype);
-            item.setPositionX(positionX - item.getWidth() / 2);
+            inGameItem = new InGameItem(positionX, positionY, 2, i_state);
+            inGameItem.setPositionX(positionX - inGameItem.getWidth() / 2);
         }
-        return item;
+        return inGameItem;
     }
 
 
