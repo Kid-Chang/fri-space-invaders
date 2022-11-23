@@ -1,10 +1,7 @@
 package engine;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -18,7 +15,7 @@ public class ChapterState {
 	/** Current map size.*/
 	private int map_size;
 
-	LinkedHashMap<C_State, Integer> c_state;
+	private LinkedHashMap<C_State, Integer> c_state;
 
 	public enum Stage_Type {
 		NONE,
@@ -91,6 +88,7 @@ public class ChapterState {
 			}
 		} while(bfs(cur_x, cur_y) == 1);
 		is_adj[cur_y][cur_x] = 1;
+		curStageClear();
 		logger.info("map initialized");
 	}
 
@@ -110,12 +108,19 @@ public class ChapterState {
 			q.add(new Pair(x, y));
 			visit[y][x] = 1;
 		}
+		ArrayList<Pair> maybeBoss = new ArrayList<>();
+		int maxRange = 0;
 		while (!q.isEmpty()) {
 			Pair p = q.poll();
+			if (maxRange < visit[p.y][p.x]){
+				maxRange = visit[p.y][p.x];
+				maybeBoss.clear();
+			}
+			maybeBoss.add(p);
 			for (int i = 0; i < 4; i++){
 				if (map_moveable[p.y][p.x][i] == 1 && visit[p.y + dy[i]][p.x + dx[i]] == 0){
 					q.add(new Pair(p.x + dx[i], p.y + dy[i]));
-					visit[p.y + dy[i]][p.x + dx[i]] = 1;
+					visit[p.y + dy[i]][p.x + dx[i]] = visit[p.y][p.x] + 1;
 				}
 			}
 		}
@@ -123,6 +128,11 @@ public class ChapterState {
 			for (int j = 0; j < map_size; j++)
 				if (visit[i][j] == 0 && map_type[i][j] > 0)
 					return 1;
+
+		Random rd = new Random();
+		Pair bossPos = maybeBoss.get(rd.nextInt(maybeBoss.size()));
+		map_type[bossPos.y][bossPos.x] = Stage_Type.values().length - 1;
+
 		return 0;
 	}
 	public LinkedHashMap getC_state() {
@@ -143,11 +153,14 @@ public class ChapterState {
 		c_state.replace(key, value);
 	}
 
-	public void curStageClear(){
+	public int curStageClear(){
 		for (int i = 0; i < 4; i++)
 			if (map_moveable[cur_y][cur_x][i] == 1)
 				is_adj[cur_y + dy[i]][cur_x + dx[i]] = 1;
+
+		int tmp = map_type[cur_y][cur_x];
 		map_type[cur_y][cur_x] = Stage_Type.CLEAR.ordinal();
+		return tmp;
 	}
 
 	public void curPosMove(int dir){
