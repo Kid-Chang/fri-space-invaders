@@ -1,6 +1,5 @@
 package engine;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -9,9 +8,9 @@ import java.util.logging.Logger;
 
 /**
  * Implements an object that stores the state of the game between levels.
- * 
+ *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
+ *
  */
 
 public class ChapterState {
@@ -71,24 +70,9 @@ public class ChapterState {
 
 		Random rd = new Random();
 		do {
-			for (int i = 0; i < map_size; i++){
-				for (int j = 0; j < map_size; j++){
-					map_type[i][j] = rd.nextInt(Stage_Type.values().length - 2); // Exclude type { CLEAR, BOSS }
-					if (map_type[i][j] == Stage_Type.ENEMY.ordinal())
-						map_difficulty[i][j] = rd.nextInt(7);
-				}
-			}
-			for (int i = 0; i < map_size; i++){
-				for (int j = 0; j < map_size; j++){
-					for (int k = 0; k < 4; k++){
-						int cx = j + dx[k], cy = i + dy[k];
-						if(cx < 0 || cx >= map_size || cy < 0 || cy >= map_size || map_type[i][j] == 0 || map_type[cy][cx] == 0)
-							map_moveable[i][j][k] = 0;
-						else
-							map_moveable[i][j][k] = 1;
-					}
-				}
-			}
+			set_map_maptype(rd);
+			set_map_movable();
+
 		} while(bfs(cur_x, cur_y) == 1);
 		is_adj[cur_y][cur_x] = 1;
 		logger.info("map initialized");
@@ -160,5 +144,29 @@ public class ChapterState {
 
 	public boolean isCur(int y, int x){
 		return x == cur_x && y == cur_y;
+	}
+
+	public void set_map_maptype(Random rd){
+		for (int i = 0; i < map_size; i++){
+			for (int j = 0; j < map_size; j++){
+				map_type[i][j] = rd.nextInt(Stage_Type.values().length - 2); // Exclude type { CLEAR, BOSS }
+				if (map_type[i][j] == Stage_Type.ENEMY.ordinal())
+					map_difficulty[i][j] = rd.nextInt(7);
+			}
+		}
+	}
+
+	public void set_map_movable(){
+		for (int i = 0; i < map_size; i++){
+			for (int j = 0; j < map_size; j++){
+				for (int k = 0; k < 4; k++){
+					int cx = j + dx[k], cy = i + dy[k];
+					if(cx < 0 || cx >= map_size || cy < 0 || cy >= map_size || map_type[i][j] == 0 || map_type[cy][cx] == 0)
+						map_moveable[i][j][k] = 0;
+					else
+						map_moveable[i][j][k] = 1;
+				}
+			}
+		}
 	}
 }
