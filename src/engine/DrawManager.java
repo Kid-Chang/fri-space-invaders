@@ -93,8 +93,14 @@ public final class DrawManager {
 		Shield,
     
     /** Life shape */
-		Life
+		Life,
 
+		/** Map marker */
+		Mark_ENEMY,
+		Mark_STORE,
+		Mark_REPAIR,
+		Mark_CLEAR,
+		Mark_BOSS
 	};
 
 	/**
@@ -127,6 +133,11 @@ public final class DrawManager {
 			spriteMap.put(SpriteType.Shield, new boolean[13][1]);
 			spriteMap.put(SpriteType.Life, new boolean[13][13]);
 			spriteMap.put(SpriteType.EnemyShipdangerous, new boolean[16][7]);
+			spriteMap.put(SpriteType.Mark_ENEMY, new boolean[9][9]);
+			spriteMap.put(SpriteType.Mark_STORE, new boolean[9][9]);
+			spriteMap.put(SpriteType.Mark_REPAIR, new boolean[9][9]);
+			spriteMap.put(SpriteType.Mark_CLEAR, new boolean[9][9]);
+			spriteMap.put(SpriteType.Mark_BOSS, new boolean[9][9]);
 
 			fileManager.loadSprite(spriteMap);
 
@@ -1095,7 +1106,6 @@ public final class DrawManager {
 		int dy[] = {0,0,1,-1};
 		int c_size = 40; // cell size
 		int cm_size = 70; // cell margin size
-		PermanentState permanentState = PermanentState.getInstance();
 
 		for (int i = 0; i < map_type.length; i++){ //row
 			for (int j = 0; j < map_type[0].length; j++){ //column
@@ -1104,20 +1114,38 @@ public final class DrawManager {
 				int cell_x = screen.getWidth() / 2 - ((map_type[0].length - 1) * cm_size + c_size) / 2 + j * cm_size;
 				int cell_y = screen.getHeight() * 4 / 7 - ((map_type.length - 1) * cm_size + c_size) / 2 + i * cm_size;
 
-				if (chapterState.isCur(i, j)) {
-					drawEntity(new Ship(0, 0),
-							cell_x + (c_size - 26) / 2, cell_y + (c_size - 16) / 2);
-				}
-
-				if (map_type[i][j] == ChapterState.Stage_Type.CLEAR.ordinal())
+				if (map_type[i][j] == ChapterState.Stage_Type.CLEAR.ordinal()) // draw vertex
 					backBufferGraphics.setColor(Color.GRAY);
 				else if (is_adj[i][j] == 1)
 					backBufferGraphics.setColor(Color.GREEN);
 				else
 					backBufferGraphics.setColor(Color.MAGENTA);
-
 				backBufferGraphics.drawOval(cell_x,cell_y,c_size,c_size);
-				for (int k = 0; k < 4; k++){
+
+				if (chapterState.isCur(i, j)) { // draw ship
+					drawEntity(new Ship(0, 0),
+							cell_x + (c_size - 26) / 2, cell_y + (c_size - 16) / 2);
+				}
+				else{
+					boolean[][] image = null; // draw marker
+					if (map_type[i][j] == ChapterState.Stage_Type.ENEMY.ordinal())
+						image = spriteMap.get(SpriteType.Mark_ENEMY);
+					if (map_type[i][j] == ChapterState.Stage_Type.STORE.ordinal())
+						image = spriteMap.get(SpriteType.Mark_STORE);
+					if (map_type[i][j] == ChapterState.Stage_Type.REPAIR.ordinal())
+						image = spriteMap.get(SpriteType.Mark_REPAIR);
+					if (map_type[i][j] == ChapterState.Stage_Type.CLEAR.ordinal())
+						image = spriteMap.get(SpriteType.Mark_CLEAR);
+					if (map_type[i][j] == ChapterState.Stage_Type.BOSS.ordinal())
+						image = spriteMap.get(SpriteType.Mark_BOSS);
+					for (int k = 0; k < image.length; k++)
+						for (int l = 0; l < image[k].length; l++)
+							if (image[k][l])
+								backBufferGraphics.drawRect(cell_x + (c_size - 18) / 2 + k * 2, cell_y + (c_size - 18) / 2
+										+ l * 2, 1, 1);
+				}
+
+				for (int k = 0; k < 4; k++){ // draw edge
 					if (map_moveable[i][j][k] == 0)
 						continue;
 					if (map_type[i][j] == ChapterState.Stage_Type.CLEAR.ordinal() &&
