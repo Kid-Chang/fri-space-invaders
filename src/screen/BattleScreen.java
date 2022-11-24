@@ -437,7 +437,7 @@ public class BattleScreen extends Screen {
 	}
 
 	public void collideEnemy (EnemyShip enemyShip, Bullet bullet, Set<Bullet> bullets) {
-		if (enemyShip != null && enemyShip.isDestroyed() && checkCollision(bullet, enemyShip)) {
+		if (enemyShip != null && !enemyShip.isDestroyed() && checkCollision(bullet, enemyShip)) {
 			SoundPlay.getInstance().play(SoundType.bonusEnemyKill);
 			battleState.gainB_state(C_State.score, enemyShip.getPointValue());
 			battleState.gainB_state(C_State.shipsDestroyed, 1);
