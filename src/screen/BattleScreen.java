@@ -397,21 +397,21 @@ public class BattleScreen extends Screen {
 				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
 					recyclable.add(bullet);
 
-
-					if (shield == null && !this.ship.isDestroyed()) {
+					if (!this.ship.isDestroyed()) {
 						SoundPlay.getInstance().play(SoundType.hit);
-						this.ship.destroy();
-						battleState.gainB_state(C_State.livesRemaining, -1);
-						this.logger.info("Hit on player ship, " + battleState.getB_state(C_State.livesRemaining)
-								+ " lives remaining.");
+						if (shield == null) {
+							this.ship.destroy();
+							battleState.gainB_state(C_State.livesRemaining, -1);
+							this.logger.info("Hit on player ship, " + battleState.getB_state(C_State.livesRemaining)
+									+ " lives remaining.");
 							this.clearItem();
-
-					} else if (!this.ship.isDestroyed()) {
-						shield = null;
+						} else {
+							shield = null;
+						}
 					}
 				}
 			} else {
-				for (EnemyShip enemyShip : this.enemyShipFormation)
+				for (EnemyShip enemyShip : this.enemyShipFormation) {
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
 						SoundPlay.getInstance().play(SoundType.enemyKill);
@@ -428,31 +428,24 @@ public class BattleScreen extends Screen {
 						this.enemyShipFormation.destroy(enemyShip);
 						recyclable.add(bullet);
 					}
-				if (this.enemyShipSpecial != null
-						&& !this.enemyShipSpecial.isDestroyed()
-						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					SoundPlay.getInstance().play(SoundType.bonusEnemyKill);
-					battleState.gainB_state(C_State.score, enemyShipSpecial.getPointValue());
-					battleState.gainB_state(C_State.shipsDestroyed, 1);
-
-					this.enemyShipSpecial.destroy();
-					this.enemyShipSpecialExplosionCooldown.reset();
-					recyclable.add(bullet);
 				}
-				if (this.enemyShipDangerous != null
-						&& !this.enemyShipDangerous.isDestroyed()
-						&& checkCollision(bullet, this.enemyShipDangerous)) {
-					SoundPlay.getInstance().play(SoundType.bonusEnemyKill);
-					battleState.gainB_state(C_State.score, enemyShipDangerous.getPointValue());
-					battleState.gainB_state(C_State.shipsDestroyed, 1);
-
-					this.enemyShipDangerous.destroy();
-					this.enemyShipdangerousExplosionCooldown.reset();
-					recyclable.add(bullet);
-				}
+				collideEnemy(this.enemyShipSpecial, bullet, recyclable);
+				collideEnemy(this.enemyShipDangerous, bullet, recyclable);
 			}
 		this.bullets.removeAll(recyclable);
 		BulletPool.recycle(recyclable);
+	}
+
+	public void collideEnemy (EnemyShip enemyShip, Bullet bullet, Set<Bullet> bullets) {
+		if (enemyShip != null && enemyShip.isDestroyed() && checkCollision(bullet, enemyShip)) {
+			SoundPlay.getInstance().play(SoundType.bonusEnemyKill);
+			battleState.gainB_state(C_State.score, enemyShip.getPointValue());
+			battleState.gainB_state(C_State.shipsDestroyed, 1);
+
+			enemyShip.destroy();
+			this.enemyShipdangerousExplosionCooldown.reset();
+			bullets.add(bullet);
+		}
 	}
 
 	/**
