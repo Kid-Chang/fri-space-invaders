@@ -953,10 +953,27 @@ public final class DrawManager {
 		backBufferGraphics.drawRect(screen.getWidth() / 2 + 50, screen.getHeight() / 2, 100, 100);
 		backBufferGraphics.drawString(rerollString, screen.getWidth() / 2 + 100 - fontRegularMetrics.stringWidth(rerollString) / 2, screen.getWidth() / 2 + 180);
 
-		if(menu < 2) { // shape, color
+		if (menu == 0) { // shape, color
 			drawEntity(new Ship(0, 0),
-					screen.getWidth() / 2 + 89, screen.getHeight() / 2 + 42);
+					screen.getWidth() / 2 + 88, screen.getHeight() / 2 + 30);
+			int x = permanentState.getP_state(P_State.shipShape);
+			String s = "";
+			if (x == 0) {
+				s = "s-37";
+			}
+			else if (x == 1) {
+				s = "f-22";
+			}
+			else if (x == 2) {
+				s = "b-45";
+			}
+			backBufferGraphics.drawString(s, screen.getWidth() / 2 + 85, screen.getHeight() / 2 + 70);
 		}
+		else if(menu == 1) {
+			drawEntity(new Ship(0, 0),
+					screen.getWidth() / 2 + 88, screen.getHeight() / 2 + 30);
+		}
+
 		else if(menu == 2){ // bullet sfx
 			backBufferGraphics.setFont(fontBig);
 			backBufferGraphics.drawString(Integer.toString(permanentState.getP_state(P_State.bulletSFX)), screen.getWidth() / 2 + 96, screen.getHeight() / 2 + 60);
