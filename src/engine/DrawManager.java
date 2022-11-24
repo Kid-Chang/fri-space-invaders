@@ -972,6 +972,20 @@ public final class DrawManager {
 		else if(menu == 1) {
 			drawEntity(new Ship(0, 0),
 					screen.getWidth() / 2 + 88, screen.getHeight() / 2 + 30);
+			int x = permanentState.getP_state(P_State.shipColor);
+			String s = "";
+			if (x == 0) {
+				s = "blue";
+				backBufferGraphics.drawString(s, screen.getWidth() / 2 + 81, screen.getHeight() / 2 + 70);
+			}
+			else if (x == 1) {
+				s = "gray";
+				backBufferGraphics.drawString(s, screen.getWidth() / 2 + 81, screen.getHeight() / 2 + 70);
+			}
+			else if (x == 2) {
+				s = "green";
+				backBufferGraphics.drawString(s, screen.getWidth() / 2 + 76, screen.getHeight() / 2 + 70);
+			}
 		}
 
 		else if(menu == 2){ // bullet sfx
