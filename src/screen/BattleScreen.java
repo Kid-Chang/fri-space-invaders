@@ -187,7 +187,7 @@ public class BattleScreen extends Screen {
 	 * Updates the elements on screen and checks for events.
 	 */
 	protected final void update() {
-		super.update();
+			super.update();
 
 		if (this.inputDelay.checkFinished() && !this.levelFinished) {
 
@@ -202,66 +202,24 @@ public class BattleScreen extends Screen {
 				boolean isLeftBorder = this.ship.getPositionX()
 						- this.ship.getSpeed() < 1;
 
-				if (moveRight && !isRightBorder) {
-					this.ship.moveRight();
-					if(shield != null)
-							shield.moveRight();
-				}
-				if (moveLeft && !isLeftBorder) {
-					this.ship.moveLeft();
-					if(shield != null)
-						shield.moveLeft();
-				}
-				if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
-					if (this.ship.shoot(this.bullets))
+				if (moveRight && !isRightBorder)
+					moveShip("right");
+
+				if (moveLeft && !isLeftBorder)
+					moveShip("left");
+
+				if (inputManager.isKeyDown(KeyEvent.VK_SPACE) && this.ship.shoot(this.bullets))
 						battleState.gainB_state(C_State.bulletsShot, 1);
 			}
 
-			if (this.enemyShipSpecial != null) {
-				if (!this.enemyShipSpecial.isDestroyed())
-					this.enemyShipSpecial.move(2, 0);
-				else if (this.enemyShipSpecialExplosionCooldown.checkFinished())
-					this.enemyShipSpecial = null;
-
-			}
-			if (this.enemyShipSpecial == null
-					&& this.enemyShipSpecialCooldown.checkFinished()) {
-				this.enemyShipSpecial = new EnemyShip();
-				this.enemyShipSpecialCooldown.reset();
-				this.logger.info("A special ship appears");
-			}
-			if (this.enemyShipSpecial != null
-					&& this.enemyShipSpecial.getPositionX() > this.width) {
-				this.enemyShipSpecial = null;
-				this.logger.info("The special ship has escaped");
-			}
-
-			/** add dangerousShip */
-			if (this.enemyShipDangerous != null) {
-				if (!this.enemyShipDangerous.isDestroyed())
-					this.enemyShipDangerous.move(1, 0);
-				else if (this.enemyShipSpecialExplosionCooldown.checkFinished())
-					this.enemyShipDangerous = null;
-
-			}
-			if (this.enemyShipDangerous == null
-					&& this.enemyShipdangerousCooldown.checkFinished()) {
-				this.enemyShipDangerous = new EnemyShip(Color.BLUE);
-				this.enemyShipdangerousCooldown.reset();
-				this.logger.info("A dangerous ship appears");
-			}
-			if (this.enemyShipDangerous != null
-					&& this.enemyShipDangerous.getPositionX() > this.width) {
-				battleState.gainB_state(C_State.livesRemaining, -1);
-				this.enemyShipDangerous = null;
-				this.logger.info("The dangerous ship has escaped and you has lost lives");
-			}
+			checkEnemyShipSpecial();
+			checkEnemyShipDangerous();
 
 			this.ship.update();
 			this.enemyShipFormation.update();
 			this.enemyShipFormation.shoot(this.bullets);
-
 		}
+
 		for(InGameItem inGameItem : this.itemIterator){
 			if(inGameItem != null) {
 				manageGetItem(inGameItem);
@@ -283,6 +241,59 @@ public class BattleScreen extends Screen {
 		if(this.enemyShipFormation.isEmpty()){
 			SoundPlay.getInstance().play(SoundType.roundClear);
 			this.isRunning = false;
+		}
+	}
+
+	public void moveShip(String order) {
+		if (Objects.equals(order, "left")) {
+			this.ship.moveLeft();
+			if (shield != null)
+				shield.moveLeft();
+		} else {
+			this.ship.moveRight();
+			if(shield != null)
+				shield.moveRight();
+		}
+	}
+
+	public void checkEnemyShipSpecial() {
+		if (this.enemyShipSpecial != null) {
+			if (this.enemyShipSpecial.getPositionX() > this.width) {
+				this.enemyShipSpecial = null;
+				this.logger.info("The special ship has escaped");
+			} else {
+				if (!this.enemyShipSpecial.isDestroyed())
+					this.enemyShipSpecial.move(2, 0);
+				else if (this.enemyShipSpecialExplosionCooldown.checkFinished())
+					this.enemyShipSpecial = null;
+			}
+		} else {
+			if (this.enemyShipSpecialCooldown.checkFinished()) {
+				this.enemyShipSpecial = new EnemyShip();
+				this.enemyShipSpecialCooldown.reset();
+				this.logger.info("A special ship appears");
+			}
+		}
+	}
+
+	public void checkEnemyShipDangerous() {
+		if (this.enemyShipDangerous != null) {
+			if (this.enemyShipDangerous.getPositionX() > this.width) {
+				battleState.gainB_state(C_State.livesRemaining, -1);
+				this.enemyShipDangerous = null;
+				this.logger.info("The dangerous ship has escaped and you has lost lives");
+			} else {
+				if (!this.enemyShipDangerous.isDestroyed())
+					this.enemyShipDangerous.move(1, 0);
+				else if (this.enemyShipSpecialExplosionCooldown.checkFinished())
+					this.enemyShipDangerous = null;
+			}
+		} else {
+			if (this.enemyShipdangerousCooldown.checkFinished()) {
+				this.enemyShipDangerous = new EnemyShip(Color.BLUE);
+				this.enemyShipdangerousCooldown.reset();
+				this.logger.info("A dangerous ship appears");
+			}
 		}
 	}
 
@@ -386,21 +397,21 @@ public class BattleScreen extends Screen {
 				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
 					recyclable.add(bullet);
 
-
-					if (shield == null && !this.ship.isDestroyed()) {
+					if (!this.ship.isDestroyed()) {
 						SoundPlay.getInstance().play(SoundType.hit);
-						this.ship.destroy();
-						battleState.gainB_state(C_State.livesRemaining, -1);
-						this.logger.info("Hit on player ship, " + battleState.getB_state(C_State.livesRemaining)
-								+ " lives remaining.");
+						if (shield == null) {
+							this.ship.destroy();
+							battleState.gainB_state(C_State.livesRemaining, -1);
+							this.logger.info("Hit on player ship, " + battleState.getB_state(C_State.livesRemaining)
+									+ " lives remaining.");
 							this.clearItem();
-
-					} else if (!this.ship.isDestroyed()) {
-						shield = null;
+						} else {
+							shield = null;
+						}
 					}
 				}
 			} else {
-				for (EnemyShip enemyShip : this.enemyShipFormation)
+				for (EnemyShip enemyShip : this.enemyShipFormation) {
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
 						SoundPlay.getInstance().play(SoundType.enemyKill);
@@ -417,31 +428,24 @@ public class BattleScreen extends Screen {
 						this.enemyShipFormation.destroy(enemyShip);
 						recyclable.add(bullet);
 					}
-				if (this.enemyShipSpecial != null
-						&& !this.enemyShipSpecial.isDestroyed()
-						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					SoundPlay.getInstance().play(SoundType.bonusEnemyKill);
-					battleState.gainB_state(C_State.score, enemyShipSpecial.getPointValue());
-					battleState.gainB_state(C_State.shipsDestroyed, 1);
-
-					this.enemyShipSpecial.destroy();
-					this.enemyShipSpecialExplosionCooldown.reset();
-					recyclable.add(bullet);
 				}
-				if (this.enemyShipDangerous != null
-						&& !this.enemyShipDangerous.isDestroyed()
-						&& checkCollision(bullet, this.enemyShipDangerous)) {
-					SoundPlay.getInstance().play(SoundType.bonusEnemyKill);
-					battleState.gainB_state(C_State.score, enemyShipDangerous.getPointValue());
-					battleState.gainB_state(C_State.shipsDestroyed, 1);
-
-					this.enemyShipDangerous.destroy();
-					this.enemyShipdangerousExplosionCooldown.reset();
-					recyclable.add(bullet);
-				}
+				collideEnemy(this.enemyShipSpecial, bullet, recyclable);
+				collideEnemy(this.enemyShipDangerous, bullet, recyclable);
 			}
 		this.bullets.removeAll(recyclable);
 		BulletPool.recycle(recyclable);
+	}
+
+	public void collideEnemy (EnemyShip enemyShip, Bullet bullet, Set<Bullet> bullets) {
+		if (enemyShip != null && !enemyShip.isDestroyed() && checkCollision(bullet, enemyShip)) {
+			SoundPlay.getInstance().play(SoundType.bonusEnemyKill);
+			battleState.gainB_state(C_State.score, enemyShip.getPointValue());
+			battleState.gainB_state(C_State.shipsDestroyed, 1);
+
+			enemyShip.destroy();
+			this.enemyShipdangerousExplosionCooldown.reset();
+			bullets.add(bullet);
+		}
 	}
 
 	/**
