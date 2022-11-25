@@ -2,6 +2,7 @@ package entity;
 
 import java.awt.Color;
 
+import engine.DrawManager;
 import engine.DrawManager.SpriteType;
 
 /**
@@ -17,7 +18,9 @@ public class Bullet extends Entity {
 	 * positive is down.
 	 */
 	private int speed;
-	Color[] colors = {Color.WHITE, Color.LIGHT_GRAY, Color.GRAY, Color.DARK_GRAY, Color.RED, Color.PINK, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.CYAN, Color.BLUE};
+	private Color[] colors = {Color.WHITE, Color.LIGHT_GRAY, Color.GRAY, Color.DARK_GRAY, Color.RED, Color.PINK, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.CYAN, Color.BLUE};
+
+	private boolean isDestroy = false;
 
 	/**
 	 * Constructor, establishes the bullet's properties.
@@ -49,6 +52,20 @@ public class Bullet extends Entity {
 			this.spriteType = SpriteType.EnemyBullet;
 			this.setColor(Color.WHITE);
 		}
+	}
+
+	/**
+	 * decision to player's obtaining item.
+	 */
+	public void setIsDestroy(){
+		isDestroy = true;
+	}
+
+	/**
+	 * get information that isget.
+	 */
+	public boolean getIsDestroy(){
+		return isDestroy;
 	}
 
 	/**

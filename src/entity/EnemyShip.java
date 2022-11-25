@@ -108,9 +108,6 @@ public class EnemyShip extends Entity {
 		return this.i_State;
 	}
 
-	public void itemDrop(final Set<InGameItem> inGameItems){
-		inGameItems.add(ItemIterator.drop(positionX + this.width/2 , positionY, this.getItemType()));
-	}
 
 
 	//추가

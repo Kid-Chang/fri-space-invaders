@@ -57,6 +57,31 @@ public class ChapterState {
 		c_state.put(C_State.livesRemaining, 3);
 		c_state.put(C_State.bulletsShot, 0);
 		c_state.put(C_State.shipsDestroyed, 0);
+
+		if (PermanentState.getInstance().getP_state(P_State.shipShape) == 0){
+			c_state.put(C_State.SHOOTING_INTERVAL, 750);
+			c_state.put(C_State.INIT_SHOOTING_INTERVAL, 750);
+			c_state.put(C_State.BULLET_SPEED, -6);
+			c_state.put(C_State.INIT_BULLET_SPEED, -6);
+			c_state.put(C_State.SPEED, 2);
+			c_state.put(C_State.INIT_SPEED, 2);
+		}
+		if (PermanentState.getInstance().getP_state(P_State.shipShape) == 1){
+			c_state.put(C_State.SHOOTING_INTERVAL, 700);
+			c_state.put(C_State.INIT_SHOOTING_INTERVAL, 700);
+			c_state.put(C_State.BULLET_SPEED, -6);
+			c_state.put(C_State.INIT_BULLET_SPEED, -6);
+			c_state.put(C_State.SPEED, 3);
+			c_state.put(C_State.INIT_SPEED, 3);
+		}
+		if (PermanentState.getInstance().getP_state(P_State.shipShape) == 2){
+			c_state.put(C_State.SHOOTING_INTERVAL, 650);
+			c_state.put(C_State.INIT_SHOOTING_INTERVAL, 650);
+			c_state.put(C_State.BULLET_SPEED, -8);
+			c_state.put(C_State.INIT_BULLET_SPEED, -8);
+			c_state.put(C_State.SPEED, 3);
+			c_state.put(C_State.INIT_SPEED, 3);
+		}
 	}
 
 	private void initialize_map(){

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import engine.*;
 import engine.DrawManager.SpriteType;
+import screen.BattleScreen;
 import sound.SoundPlay;
 import sound.SoundType;
 //import entity.Shield;
@@ -16,22 +17,12 @@ import sound.SoundType;
  * 
  */
 public class Ship extends Entity {
-
-	/** Time between shots. */
-	private int SHOOTING_INTERVAL, INIT_SHOOTING_INTERVAL;
-	/** Speed of the bullets shot by the ship. */
-	private int BULLET_SPEED, INIT_BULLET_SPEED;
-	/** Movement of the ship for each unit of time. */
-	private double SPEED, INIT_SPEED;
-
-	/** Minimum time between shots. */
-	private Cooldown shootingCooldown;
 	/** Time spent inactive between hits. */
-	private Cooldown destructionCooldown;
+	public Cooldown destructionCooldown;
 
 	private int shipShape, shipColor;
 
-//	private Shield shield;
+	public Shield shield = null;
 
 	/**
 	 * Constructor, establishes the ship's properties.
@@ -54,69 +45,30 @@ public class Ship extends Entity {
 		if (shipColor == 1) this.color = Color.GRAY;
 		if (shipColor == 2) this.color = Color.GREEN;
 
-		if (shipShape == 0) {
+		if (shipShape == 0)
 			this.spriteType = SpriteType.ShipA;
-			this.SHOOTING_INTERVAL = INIT_SHOOTING_INTERVAL = 750;
-			this.BULLET_SPEED = INIT_BULLET_SPEED = -6;
-			this.SPEED = INIT_SPEED = 2;
-			this.shootingCooldown = Core.getCooldown(SHOOTING_INTERVAL);
-			this.destructionCooldown = Core.getCooldown(1000);
-		}
-		if (shipShape == 1) {
+		if (shipShape == 1)
 			this.spriteType = SpriteType.ShipB;
-			this.SHOOTING_INTERVAL = INIT_SHOOTING_INTERVAL = 700;
-			this.BULLET_SPEED = INIT_BULLET_SPEED = -6;
-			this.SPEED = INIT_SPEED = 3;
-			this.shootingCooldown = Core.getCooldown(SHOOTING_INTERVAL);
-			this.destructionCooldown = Core.getCooldown(1000);
-		}
-		if (shipShape == 2) {
+		if (shipShape == 2)
 			this.spriteType = SpriteType.ShipC;
-			this.SHOOTING_INTERVAL = INIT_SHOOTING_INTERVAL = 650;
-			this.BULLET_SPEED = INIT_BULLET_SPEED = -8;
-			this.SPEED = INIT_SPEED = 3;
-			this.shootingCooldown = Core.getCooldown(SHOOTING_INTERVAL);
-			this.destructionCooldown = Core.getCooldown(1000);
+
+		destructionCooldown = Core.getCooldown(1000);
+	}
+
+	/**
+	 	Moves the ship speed units, until the screen border is reached.
+	 */
+	public final void movePositionX(int delta)
+	{
+		if (this.destructionCooldown.checkFinished()) {
+			positionX += delta;
+			if (shield != null)
+				shield.movePositionX();
 		}
 	}
 
-	/**
-	 * Moves the ship speed uni ts right, or until the right screen border is
-	 * reached.
-	 */
-	public final void moveRight()
-	{
-		this.positionX += SPEED;
-//		shield.moveRight();
-	}
 
-	/**
-	 * Moves the ship speed units left, or until the left screen border is
-	 * reached.
-	 */
-	public final void moveLeft()
-	{
-		this.positionX -= SPEED;
-//		shield.moveRight();
-	}
 
-	/**
-	 * Shoots a bullet upwards.
-	 * 
-	 * @param bullets
-	 *            List of bullets on screen, to add the new bullet.
-	 * @return Checks if the bullet was shot correctly.
-	 */
-	public final boolean shoot(final Set<Bullet> bullets) {
-		if (this.shootingCooldown.checkFinished()) {
-			this.shootingCooldown.reset();
-			bullets.add(BulletPool.getBullet(positionX + this.width / 2,
-					positionY, BULLET_SPEED));
-			SoundPlay.getInstance().play(SoundType.shoot);
-			return true;
-		}
-		return false;
-	}
 
 	/**
 	 * Updates status of the ship.
@@ -135,41 +87,19 @@ public class Ship extends Entity {
 	}
 
 	/**
-	 * Switches the ship to its destroyed state.
+	 * Switches the ship to its damaged state.
 	 */
-	public final void destroy() {
+	public final void damaged() {
 		this.destructionCooldown.reset();
 	}
 
 	/**
-	 * Checks if the ship is destroyed.
+	 * Checks if the ship is damaged.
 	 * 
-	 * @return True if the ship is currently destroyed.
+	 * @return True if the ship is currently damaged.
 	 */
-	public final boolean isDestroyed() {
-		return !this.destructionCooldown.checkFinished();
+	public final boolean isDamaged() {
+		return !destructionCooldown.checkFinished();
 	}
 
-	/**
-	 * Getter for the ship's speed.
-	 * 
-	 * @return Speed of the ship.
-	 */
-	public final double getSpeed() {
-		return SPEED;
-	}
-	public final int getShootingInterval() {return SHOOTING_INTERVAL;}
-	public final int getBulletSpeed() {return BULLET_SPEED;}
-	public void setShootingInterval(double setshootinterval){
-		SHOOTING_INTERVAL = (int)setshootinterval;
-		this.shootingCooldown = Core.getCooldown((int)setshootinterval);
-	}
-	public void setBulletSpeed(int setbulletspeed){BULLET_SPEED = setbulletspeed;}
-	public void setShipSpeed(double setshipspeed) {SPEED = setshipspeed;}
-
-	public void setInitState(){
-		SPEED = INIT_SPEED;
-		this.shootingCooldown = engine.Core.getCooldown(INIT_SHOOTING_INTERVAL);
-		BULLET_SPEED = INIT_BULLET_SPEED;
-	}
 }

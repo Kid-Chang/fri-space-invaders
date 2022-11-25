@@ -12,7 +12,5 @@ public enum I_State {
     /** extraLifeItem */
     ExtraLifeItem,
     /** MachineGun item*/
-    MachineGun,
-    /** item, not used*/
-    EnemyShipSpeedItem
+    MachineGun
 }

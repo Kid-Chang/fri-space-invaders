@@ -13,7 +13,7 @@ public class InGameItem extends Entity {
     /** Item types. */
 
     private I_State i_state;
-    private boolean isget;
+    private boolean isDestroy = false;
 
     /**
      * Constructor, establishes the item's properties.
@@ -29,10 +29,10 @@ public class InGameItem extends Entity {
      */
     public InGameItem(final int positionX, final int positionY, final int speed, final I_State i_state) {
         super(positionX, positionY, 9 * 2, 9 * 2, Color.ORANGE);
+        spriteType = DrawManager.SpriteType.ItemDrop;
         this.setPositionX(positionX -this.getWidth()/2);
         this.speed = speed;
         this.i_state = i_state;
-        this.isget = false;
     }
 
     /**
@@ -42,29 +42,20 @@ public class InGameItem extends Entity {
         this.positionY += this.speed;
     }
 
-    /**
-     * Sets correct sprite for the item, based on for player to Obtained item.
-     */
-    public void setSprite () {
-        if (!this.isget)
-            this.spriteType = DrawManager.SpriteType.ItemDrop;
-        else
-            this.spriteType = DrawManager.SpriteType.ItemGet;
-    }
 
     /**
      * decision to player's obtaining item.
-     * @param bool
      */
-    public void isGet(boolean bool){
-        this.isget = bool;
+    public void setIsDestroy(){
+        isDestroy = true;
+        spriteType = DrawManager.SpriteType.ItemGet;
     }
 
     /**
      * get information that isget.
      */
-    public boolean getIsget(){
-        return this.isget;
+    public boolean getIsDestroy(){
+        return isDestroy;
     }
 
     /**

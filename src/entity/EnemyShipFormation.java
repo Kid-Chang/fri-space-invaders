@@ -7,12 +7,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import engine.*;
 import screen.Screen;
-import engine.Cooldown;
-import engine.Core;
-import engine.DrawManager;
 import engine.DrawManager.SpriteType;
-import engine.GameSettings;
 
 /**
  * Groups enemy ships into a formation that moves together.
@@ -283,8 +280,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	public final void draw() {
 		for (List<EnemyShip> column : this.enemyShips)
 			for (EnemyShip enemyShip : column)
-				drawManager.drawEntity(enemyShip, enemyShip.getPositionX(),
-						enemyShip.getPositionY());
+				drawManager.drawEntity(enemyShip);
 	}
 
 	/**
@@ -453,9 +449,9 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	/**
 	 * Shoots a bullet downwards.
 	 *
-	 * @param bullets Bullets set to add the bullet being shot.
+	 * @param bulletManager Bullets manager to add the bullet being shot.
 	 */
-	public final void shoot(final Set<Bullet> bullets) {
+	public final void shoot(BulletManager bulletManager) {
 		// For now, only ships in the bottom row are able to shoot.
 		int index = (int) (Math.random() * this.shooters.size());
 		EnemyShip shooter = this.shooters.get(index);
@@ -465,7 +461,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			case EnemyShipB2:
 				if (this.shootingCooldown.checkFinished()) {
 					this.shootingCooldown.reset();
-					bullets.add(BulletPool.getBullet(shooter.getPositionX()
+					bulletManager.addBullet(new Bullet(shooter.getPositionX()
 							+ shooter.width / 2, shooter.getPositionY(), Current_Level));
 				}
 				break;
@@ -473,14 +469,14 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			case EnemyShipC2:
 				if (this.shootingCooldown.checkFinished()) {
 					this.shootingCooldown.reset();
-					bullets.add(BulletPool.getBullet(shooter.getPositionX()
+					bulletManager.addBullet(new Bullet(shooter.getPositionX()
 							+ shooter.width / 2, shooter.getPositionY(), Current_Level + 3));
 				}
 				break;
 			default:
 				if (this.shootingCooldown.checkFinished()) {
 					this.shootingCooldown.reset();
-					bullets.add(BulletPool.getBullet(shooter.getPositionX()
+					bulletManager.addBullet(new Bullet(shooter.getPositionX()
 							+ shooter.width / 2, shooter.getPositionY(), 4));
 				}
 				break;

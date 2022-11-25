@@ -73,13 +73,8 @@ public class TitleScreen extends Screen {
 			}
 			if (inputManager.isKeyDown(KeyEvent.VK_SPACE)){
 				this.isRunning = false;
-				if(this.returnCode == 2 || this.returnCode == 5){
-					SoundPlay.getInstance().stopBgm();
-				}
 				sound.SoundPlay.getInstance().play(SoundType.menuClick);
 			}
-
-
 		}
 	}
 
@@ -87,7 +82,7 @@ public class TitleScreen extends Screen {
 	 * Shifts the focus to the next menu item.
 	 */
 	private void nextMenuItem() {
-		if (this.returnCode == 8)
+		if (this.returnCode == 7)
 			this.returnCode = 0;
 		else if (this.returnCode == 0)
 			this.returnCode = 2;
@@ -101,7 +96,7 @@ public class TitleScreen extends Screen {
 	 */
 	private void previousMenuItem() {
 		if (this.returnCode == 0)
-			this.returnCode = 8;
+			this.returnCode = 7;
 		else if (this.returnCode == 2)
 			this.returnCode = 0;
 		else
@@ -119,6 +114,5 @@ public class TitleScreen extends Screen {
 		drawManager.drawMenu(this, this.returnCode);
 
 		drawManager.completeDrawing(this);
-//		drawManager.clear(this);
 	}
 }
