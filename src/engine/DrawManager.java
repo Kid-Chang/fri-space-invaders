@@ -937,8 +937,8 @@ public final class DrawManager {
 	}
 
 	public void drawStoreGacha(final Screen screen, final int menu, final int focus) {
-		String rerollString = "reroll!(100$)";
-		String coinLackString = "Not enough coins!";
+		String rerollString = "reroll! (100 gem)";
+		String coinLackString = "Not enough gem!";
 		PermanentState permanentState = PermanentState.getInstance();
 		if (focus == 0)
 			backBufferGraphics.setColor(Color.WHITE);
