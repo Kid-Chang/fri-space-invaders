@@ -226,13 +226,12 @@ public final class DrawManager {
 	 * 
 	 * @param entity
 	 *            Entity to be drawn.
-	 * @param positionX
-	 *            Coordinates for the left side of the image.
-	 * @param positionY
-	 *            Coordinates for the upper side of the image.
+	 *
 	 */
-	public void drawEntity(final Entity entity, final int positionX,
-			final int positionY) {
+	public void drawEntity(final Entity entity) {
+		int positionX = entity.getPositionX();
+		int positionY = entity.getPositionY();
+
 		boolean[][] image = spriteMap.get(entity.getSpriteType());
 
 		backBufferGraphics.setColor(entity.getColor());
@@ -317,9 +316,8 @@ public final class DrawManager {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.white);
 		backBufferGraphics.drawString(Integer.toString(lives), 20, 30);
-		Life remainLife = new Life(0, 0);
 		for (int i = 0; i < lives; i++)
-			drawEntity(remainLife, 40 + 35 * i, 12);
+			drawEntity(new Life(40 + 35 * i, 12));
 	}
 
 	/**
@@ -428,56 +426,49 @@ public final class DrawManager {
 		String loadString = "load";
 		String storeString = "store";
 		String helpString = "help";
-		String maptestString = "map test";
 
 		if (option == 2)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, playString,
-				screen.getHeight()/3);
+		drawCenteredRegularString(screen, playString, screen.getHeight()/3
+				+ fontRegularMetrics.getHeight());
 		if (option == 3)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, highScoresString, screen.getHeight()/3
-				 + fontRegularMetrics.getHeight() * 2);
+				 + fontRegularMetrics.getHeight() * 3);
 		if (option == 4)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, storeString, screen.getHeight()
-				/ 3 + fontRegularMetrics.getHeight() * 4);
+				/ 3 + fontRegularMetrics.getHeight() * 5);
 		if (option == 5)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, loadString, screen.getHeight() / 
-				 3 + fontRegularMetrics.getHeight() * 6);
+				 3 + fontRegularMetrics.getHeight() * 7);
 		if (option == 6)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, setString, screen.getHeight() / 
-				 3 + fontRegularMetrics.getHeight() * 8);
+				 3 + fontRegularMetrics.getHeight() * 9);
 		if (option == 7)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, helpString, screen.getHeight() / 
-				 3 + fontRegularMetrics.getHeight() * 10);
-		if (option == 8)
-			backBufferGraphics.setColor(Color.GREEN);
-		else
-			backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, maptestString, screen.getHeight() /
-				3 + fontRegularMetrics.getHeight() * 12);
+				 3 + fontRegularMetrics.getHeight() * 11);
 		if (option == 0)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, exitString, screen.getHeight() / 
-				 3 + fontRegularMetrics.getHeight() * 14);
+				 3 + fontRegularMetrics.getHeight() * 13);
 		
 	}
 	//mainmenu 1014
@@ -965,8 +956,7 @@ public final class DrawManager {
 		backBufferGraphics.drawString(rerollString, screen.getWidth() / 2 + 100 - fontRegularMetrics.stringWidth(rerollString) / 2, screen.getWidth() / 2 + 180);
 
 		if(menu < 2) { // shape, color
-			drawEntity(new Ship(0, 0),
-					screen.getWidth() / 2 + 89, screen.getHeight() / 2 + 42);
+			drawEntity(new Ship(screen.getWidth() / 2 + 89, screen.getHeight() / 2 + 42));
 		}
 		else if(menu == 2){ // bullet sfx
 			backBufferGraphics.setFont(fontBig);
@@ -1123,8 +1113,7 @@ public final class DrawManager {
 				backBufferGraphics.drawOval(cell_x,cell_y,c_size,c_size);
 
 				if (chapterState.isCur(i, j)) { // draw ship
-					drawEntity(new Ship(0, 0),
-							cell_x + (c_size - 26) / 2, cell_y + (c_size - 16) / 2);
+					drawEntity(new Ship(cell_x + (c_size - 26) / 2, cell_y + (c_size - 16) / 2));
 				}
 				else{
 					boolean[][] image = null; // draw marker

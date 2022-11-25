@@ -3,7 +3,6 @@ package screen;
 import engine.*;
 import sound.SoundPlay;
 import sound.SoundType;
-import to_be_delete.GameState;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;

@@ -1,7 +1,6 @@
 package screen;
 
 import engine.*;
-import to_be_delete.GameState;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -110,7 +109,7 @@ public class BattleResultScreen extends Screen {
         if (this.inputDelay.checkFinished()) {
             if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
                 // Play again.
-                this.returnCode = 8;
+                this.returnCode = 2;
                 this.isRunning = false;
             }
         }

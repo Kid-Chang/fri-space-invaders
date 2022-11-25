@@ -11,7 +11,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 import engine.DrawManager.SpriteType;
-import to_be_delete.GameState;
 
 /**
  * Manages files used in the application.
@@ -463,27 +462,27 @@ public final class FileManager {
 		}
 	}
 
-	public void Savefile(GameState gamestate) {
-		try {
-			String jarPath = FileManager.class.getProtectionDomain()
-				.getCodeSource().getLocation().getPath();
-			jarPath = URLDecoder.decode(jarPath, "UTF-8");
-			File file = new File(jarPath + "../save");
-			BufferedWriter save = new BufferedWriter(new FileWriter(file));
-
-			String state = Integer.toString(gamestate.getLevel() + 1) + ' ' +
-				Integer.toString(gamestate.getScore()) + ' ' +
-				Integer.toString(gamestate.getLivesRemaining()) + ' ' +
-				Integer.toString(gamestate.getBulletsShot()) + ' ' +
-				Integer.toString(gamestate.getShipsDestroyed());
-
-			save.write(state);
-
-			save.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public void Savefile(GameState gamestate) {
+//		try {
+//			String jarPath = FileManager.class.getProtectionDomain()
+//				.getCodeSource().getLocation().getPath();
+//			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+//			File file = new File(jarPath + "../save");
+//			BufferedWriter save = new BufferedWriter(new FileWriter(file));
+//
+//			String state = Integer.toString(gamestate.getLevel() + 1) + ' ' +
+//				Integer.toString(gamestate.getScore()) + ' ' +
+//				Integer.toString(gamestate.getLivesRemaining()) + ' ' +
+//				Integer.toString(gamestate.getBulletsShot()) + ' ' +
+//				Integer.toString(gamestate.getShipsDestroyed());
+//
+//			save.write(state);
+//
+//			save.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	public String[] loadInfo(){
 		String[] array = {"1","0","3","0","0"};

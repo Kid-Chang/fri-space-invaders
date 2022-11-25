@@ -1,6 +1,10 @@
 package engine;
 
+import entity.Bullet;
+import entity.EnemyShipFormation;
+
 import java.util.LinkedHashMap;
+import java.util.Set;
 
 /**
  * Implements an object that stores the state of the game between levels.
@@ -39,5 +43,11 @@ public class BattleState {
 
 	public void setB_state(C_State key, int value){
 		b_state.replace(key, value);
+	}
+
+	public void setInitState() {
+		setB_state(C_State.SPEED, getB_state(C_State.INIT_SPEED));
+		setB_state(C_State.BULLET_SPEED, getB_state(C_State.INIT_BULLET_SPEED));
+		setB_state(C_State.SHOOTING_INTERVAL, getB_state(C_State.INIT_SHOOTING_INTERVAL));
 	}
 }

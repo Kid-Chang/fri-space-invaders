@@ -10,7 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import screen.*;
-import to_be_delete.*;
 
 
 /**
@@ -120,11 +119,9 @@ public final class Core {
 		gameSettings.add(SETTINGS_Boss_Stage);
 
 		ChapterState chapterState = null;
-		GameState gameState;
 		PermanentState permanentState = PermanentState.getInstance();
 		ItemState itemState = ItemState.getInstance();
 
-		gameState = new GameState(1, 0, MAX_LIVES, 0, 0);
 
 
 		int returnCode = 1;
@@ -142,69 +139,14 @@ public final class Core {
 
 				case 2:
 					// Game & score.
-					GO_MAIN = true;
-					do {
-						// One extra live every few levels.
-						boolean bonusLife = gameState.getLevel()
-								% EXTRA_LIFE_FRECUENCY == 0
-								&& gameState.getLivesRemaining() < MAX_LIVES;
-						currentScreen = new GameScreen(gameState,
-								gameSettings.get(gameState.getLevel() - 1),
-								bonusLife, width, height, FPS);
-						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-								+ " game screen at " + FPS + " fps.");
-						frame.setScreen(currentScreen);
-						LOGGER.info("Closing game screen.");
-
-						gameState = ((GameScreen) currentScreen).getGameState();
-
-						if (gameState.getScore() > 500)
-							permanentState.setP_state(P_State.gem, gameState.getScore() - 500); // earn gem
-
-
-						if (gameState.getLivesRemaining() > 0) {
-							currentScreen = new PauseScreen(width, height, FPS, gameState);
-							returnCode = frame.setScreen(currentScreen);
-						}
-
-						if (gameState.getLivesRemaining() > 0 && gameState.getLevel() < NUM_LEVELS){
-							LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-									+ " game save screen at " + FPS + " fps.");
-							currentScreen = new GameSaveScreen(gameState, width, height, FPS);
-							returnCode = frame.setScreen(currentScreen);
-							LOGGER.info("Closing game save screen.");
-							if (returnCode == 2) {
-								getFileManager().Savefile(gameState);
-								LOGGER.info("Complete Save.");
-								GO_MAIN = false;
-								gameState = new GameState(1, 0, MAX_LIVES, 0, 0);
-								returnCode = 1;
-								break;
-							}
-						}
-
-						gameState = new GameState(gameState.getLevel() + 1,
-								gameState.getScore(),
-								gameState.getLivesRemaining(),
-								gameState.getBulletsShot(),
-								gameState.getShipsDestroyed()
-						);
-					} while (gameState.getLivesRemaining() > 0
-							&& gameState.getLevel() <= NUM_LEVELS);
-					if (!GO_MAIN)
-						break;
-					getFileManager().Savefile(new GameState(0, 0, 3, 0, 0));
+					if (chapterState == null){
+						chapterState = new ChapterState(4);
+					}
+					currentScreen = new MapScreen(chapterState, width, height, FPS);
 					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-							+ " score screen at " + FPS + " fps, with a score of "
-							+ gameState.getScore() + ", "
-							+ gameState.getLivesRemaining() + " lives remaining, "
-							+ gameState.getBulletsShot() + " bullets shot and "
-							+ gameState.getShipsDestroyed() + " ships destroyed.");
-					currentScreen = new ScoreScreen(width, height, FPS, gameState);
+							+ " map screen at " + FPS + " fps.");
 					returnCode = frame.setScreen(currentScreen);
-					LOGGER.info("Closing score screen.");
-					if (gameState.getLivesRemaining() == 0 || gameState.getLevel() == NUM_LEVELS + 1)
-						gameState = new GameState(1, 0, MAX_LIVES, 0, 0);
+					LOGGER.info("Closing map screen.");
 					break;
 
 				case 3:
@@ -228,7 +170,6 @@ public final class Core {
 				case 5:
 					// Load
 					String save_info [] = getFileManager().loadInfo();
-					gameState = new GameState(Integer.parseInt(save_info[0]), Integer.parseInt(save_info[1]), Integer.parseInt(save_info[2]), Integer.parseInt(save_info[3]), Integer.parseInt(save_info[4]));
 					returnCode = 2;
 					break;
 
@@ -250,15 +191,7 @@ public final class Core {
 					break;
 
 				case 8: //Map testing
-					if (chapterState == null){
-						chapterState = new ChapterState(4);
-					}
-					currentScreen = new MapScreen(chapterState, width, height, FPS);
-					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-							+ " map screen at " + FPS + " fps.");
-					returnCode = frame.setScreen(currentScreen);
-					LOGGER.info("Closing map screen.");
-					break;
+
 
 				case 9: //Volume //mainmenu 1014
 					currentScreen = new VolumeScreen(width, height, FPS);
@@ -286,7 +219,7 @@ public final class Core {
 						currentScreen = new BattleResultScreen(width, height, FPS, battleState);
 						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 								+ " battle result screen at " + FPS + " fps.");
-						returnCode = frame.setScreen(currentScreen); // is 8.
+						returnCode = frame.setScreen(currentScreen); // is 2.
 						LOGGER.info("Closing battle result screen.");
 					}
 					else{
