@@ -992,12 +992,35 @@ public final class DrawManager {
 
 		else if(menu == 2){ // bullet sfx
 			backBufferGraphics.setFont(fontBig);
-			backBufferGraphics.drawString(Integer.toString(permanentState.getP_state(P_State.bulletSFX)), screen.getWidth() / 2 + 96, screen.getHeight() / 2 + 60);
+			int x = permanentState.getP_state(P_State.bulletSFX);
+			String s = "";
+			if (x == 0) {
+				s = "A";
+			}
+			else if (x == 1) {
+				s = "B";
+			}
+			else if (x == 2) {
+				s = "C";
+			}
+			backBufferGraphics.drawString(s, screen.getWidth() / 2 + 94, screen.getHeight() / 2 + 63);
 			backBufferGraphics.setFont(fontRegular);
 		}
 		else if(menu == 3){ // bgm
-			backBufferGraphics.setFont(fontBig);
-			backBufferGraphics.drawString(Integer.toString(permanentState.getP_state(P_State.BGM)), screen.getWidth() / 2 + 96, screen.getHeight() / 2 + 60);
+			int x = permanentState.getP_state(P_State.BGM);
+			String s = "";
+			if (x == 0) {
+				s = "pop";
+				backBufferGraphics.drawString(s, screen.getWidth() / 2 + 88, screen.getHeight() / 2 + 60);
+			}
+			else if (x == 1) {
+				s = "ghost";
+				backBufferGraphics.drawString(s, screen.getWidth() / 2 + 76, screen.getHeight() / 2 + 60);
+			}
+			else if (x == 2) {
+				s = "hip";
+				backBufferGraphics.drawString(s, screen.getWidth() / 2 + 88, screen.getHeight() / 2 + 60);
+			}
 			backBufferGraphics.setFont(fontRegular);
 		}
 	}
@@ -1007,6 +1030,13 @@ public final class DrawManager {
 		backBufferGraphics.setColor(Color.MAGENTA);
 		String coinString = String.format("GEM:     %04d", gem);
 		backBufferGraphics.drawString(coinString, screen.getWidth() - 141, 40);
+	}
+
+	public void drawStoreGem(final Screen screen, final int gem) {
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.setColor(Color.MAGENTA);
+		String coinString = String.format("GEM:     %04d", gem);
+		backBufferGraphics.drawString(coinString, screen.getWidth() - 295, 130);
 	}
 
 	public void drawCoin(final Screen screen, final int coin) {
