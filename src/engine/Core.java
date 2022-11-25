@@ -60,7 +60,7 @@ public final class Core {
 			new GameSettings(7,7, 8, 5, 500);
 
 	/** add boss stage **/
-	private static final GameSettings SETTINGS_Boss_Stage=
+	private static final GameSettings SETTINGS_Boss_Stage =
 			new GameSettings(8, 3,3, 0, 200);
 
 	/** Frame to draw the screen on. */
@@ -291,6 +291,35 @@ public final class Core {
 					}
 					else{
 						//최종결과
+						currentScreen = new ResultScreen(width, height, FPS, chapterState);
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " result screen at " + FPS + " fps.");
+						returnCode = frame.setScreen(currentScreen); // is 1.
+						LOGGER.info("Closing result screen.");
+						chapterState = null; // current chapterstate delete
+						returnCode = 1;
+					}
+					break;
+
+				case 200:
+					BattleState bossState = new BattleState(chapterState.getC_state());
+					currentScreen = new BattleScreen(bossState, gameSettings.get(7),
+							false, width, height, FPS); // bonus life is false...? need condition
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " battle screen at " + FPS + " fps.");
+					frame.setScreen(currentScreen);
+					LOGGER.info("Closing battle screen.");
+					bossState = ((BattleScreen)currentScreen).getBattleState();
+					chapterState.setC_state(bossState.getB_state());
+
+					if (bossState.getB_state(C_State.livesRemaining) > 0){
+						currentScreen = new BattleResultScreen(width, height, FPS, bossState);
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " battle result screen at " + FPS + " fps.");
+						returnCode = frame.setScreen(currentScreen); // is 8.
+						LOGGER.info("Closing battle result screen.");
+					}
+					else {
 						currentScreen = new ResultScreen(width, height, FPS, chapterState);
 						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 								+ " result screen at " + FPS + " fps.");

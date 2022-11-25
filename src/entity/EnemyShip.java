@@ -20,7 +20,7 @@ public class EnemyShip extends Entity {
 
 	private static int hasItem ;
 	/** Point value of a type A enemy. */
-	//s
+	//
 
 
 	/** Point value of a type A enemy. */

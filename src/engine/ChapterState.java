@@ -1,9 +1,6 @@
 package engine;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -119,6 +116,7 @@ public class ChapterState {
 		Random rd = new Random();
 		Pair bossPos = maybeBoss.get(rd.nextInt(maybeBoss.size()));
 		map_type[bossPos.y][bossPos.x] = Stage_Type.values().length - 1;
+		map_difficulty[bossPos.y][bossPos.x] = 7;
 
 		return 0;
 	}

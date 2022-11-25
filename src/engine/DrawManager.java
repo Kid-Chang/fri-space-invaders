@@ -83,7 +83,8 @@ public final class DrawManager {
 		EnemyShipSpecial,
 		/** Destroyed enemy ship. */
 		EnemyShipdangerous,
-
+		/** Boss enemy ship. */
+		EnemyShipBoss,
 		Explosion,
 		/** dropped item */
 		ItemDrop,
@@ -138,6 +139,7 @@ public final class DrawManager {
 			spriteMap.put(SpriteType.Mark_REPAIR, new boolean[9][9]);
 			spriteMap.put(SpriteType.Mark_CLEAR, new boolean[9][9]);
 			spriteMap.put(SpriteType.Mark_BOSS, new boolean[9][9]);
+			spriteMap.put(SpriteType.EnemyShipBoss, new boolean[13][12]);
 
 			fileManager.loadSprite(spriteMap);
 

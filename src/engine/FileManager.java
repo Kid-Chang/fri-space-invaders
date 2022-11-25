@@ -402,7 +402,7 @@ public final class FileManager {
 		try {
 			String jarPath = FileManager.class.getProtectionDomain()
 					.getCodeSource().getLocation().getPath();
-			jarPath = URLDecoder.decode(jarPath, StandardCharsets.UTF_8);
+			jarPath = URLDecoder.decode(jarPath, String.valueOf(StandardCharsets.UTF_8));
 
 			String itemStatePath = new File(jarPath).getPath();
 			itemStatePath += File.separator;
@@ -440,7 +440,7 @@ public final class FileManager {
 		try {
 			String jarPath = FileManager.class.getProtectionDomain()
 					.getCodeSource().getLocation().getPath();
-			jarPath = URLDecoder.decode(jarPath, StandardCharsets.UTF_8);
+			jarPath = URLDecoder.decode(jarPath, String.valueOf(StandardCharsets.UTF_8));
 
 			String itemStatePath = new File(jarPath).getPath();
 			itemStatePath += File.separator;

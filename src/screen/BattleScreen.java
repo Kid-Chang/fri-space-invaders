@@ -326,7 +326,10 @@ public class BattleScreen extends Screen {
 					bullet.getPositionY());
 
 		// Interface.
-		drawManager.drawLevels(this, battleState.getB_state(C_State.difficulty) + 1);
+		if (battleState.getB_state(C_State.difficulty) == 7)
+			drawManager.drawChapters(this, battleState.getB_state(C_State.chapter));
+		else
+			drawManager.drawLevels(this, battleState.getB_state(C_State.difficulty) + 1);
 		drawManager.drawScore(this, battleState.getB_state(C_State.score));
 		drawManager.drawCoin(this, battleState.getB_state(C_State.coin));
 		drawManager.drawLives(this, battleState.getB_state(C_State.livesRemaining));

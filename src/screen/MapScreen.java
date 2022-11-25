@@ -84,6 +84,11 @@ public class MapScreen extends Screen {
                     returnCode = 100;
                     isRunning = false;
                 }
+                else if (stageCode == ChapterState.Stage_Type.BOSS.ordinal()) {
+                    sound.SoundPlay.getInstance().stopBgm();
+                    returnCode = 200;
+                    isRunning = false;
+                }
             }
         }
     }
