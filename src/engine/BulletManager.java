@@ -79,8 +79,7 @@ public class BulletManager {
 
             battleManager.getItemManager().addItem(new InGameItem(
                     enemyShip.getPositionX(), enemyShip.getPositionY(),
-                    2, I_State.values()[new Random().nextInt(I_State.values().length)]
-            ));
+                    2, I_State.values()[new Random().nextInt(I_State.values().length)]));
             enemyShip.destroy();
         }
     }

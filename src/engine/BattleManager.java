@@ -140,6 +140,7 @@ public class BattleManager {
      */
     public boolean shipShoot() {
         if (shootingCooldown.checkFinished()) {
+            shootingCooldown = Core.getCooldown(battleState.getB_state(C_State.SHOOTING_INTERVAL));
             shootingCooldown.reset();
             Core.getLogger().info(battleState.getB_state(C_State.BULLET_SPEED) + "");
             bulletManager.addBullet(new Bullet(ship.getPositionX(),

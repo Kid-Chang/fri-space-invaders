@@ -241,20 +241,7 @@ public class BattleScreen extends Screen {
 
 
 	/**
-	 * Manages collisions between bullets and ships.
-	 */
-
-
-	/**
-	 * Checks if two entities are colliding.
-	 * 
-	 * @param a
-	 *            First entity, the bullet.
-	 * @param b
-	 *            Second entity, the ship.
-	 * @return Result of the collision test.
-	 */
-
+	 * Ma
 
 	/**
 	 * Returns a GameState object representing the status of the game.

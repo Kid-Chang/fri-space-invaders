@@ -38,6 +38,7 @@ public class MapScreen extends Screen {
         this.returnCode = 1;
         this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
         this.selectionCooldown.reset();
+        inputDelay = Core.getCooldown(500);
     }
 
     public final int run() {
