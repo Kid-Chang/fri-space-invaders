@@ -181,7 +181,8 @@ public class StoreScreen extends Screen {
         drawManager.drawStoreMenu(this, menuCode, focusReroll);
         if (menuCode < 4)
             drawManager.drawStoreGacha(this, menuCode, focusReroll);
-        drawManager.drawGem(this, permanentState.getP_state(P_State.gem));
+        drawManager.drawStoreGem(this, permanentState.getP_state(P_State.gem));
+
 
         drawManager.completeDrawing(this);
     }

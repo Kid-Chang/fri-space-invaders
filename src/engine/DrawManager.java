@@ -1030,6 +1030,13 @@ public final class DrawManager {
 		backBufferGraphics.drawString(coinString, screen.getWidth() - 141, 40);
 	}
 
+	public void drawStoreGem(final Screen screen, final int gem) {
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.setColor(Color.MAGENTA);
+		String coinString = String.format("GEM:     %04d", gem);
+		backBufferGraphics.drawString(coinString, screen.getWidth() - 295, 130);
+	}
+
 	public void drawCoin(final Screen screen, final int coin) {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.YELLOW);
