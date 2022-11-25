@@ -141,6 +141,7 @@ public class ChapterState {
 		Random rd = new Random();
 		Pair bossPos = maybeBoss.get(rd.nextInt(maybeBoss.size()));
 		map_type[bossPos.y][bossPos.x] = Stage_Type.values().length - 1;
+		map_difficulty[bossPos.y][bossPos.x] = 7;
 
 		return 0;
 	}
